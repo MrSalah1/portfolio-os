@@ -1,0 +1,1706 @@
+@import "tailwindcss";
+
+/* =========================================================
+SALAHOS DESIGN TOKENS
+========================================================= */
+
+@theme {
+  --color-salahos-black: #000000;
+  --color-salahos-white: #ffffff;
+
+  --color-salahos-light: #c0c0c0;
+  --color-salahos-gray: #808080;
+  --color-salahos-dark: #404040;
+
+  --color-salahos-navy: #000080;
+  --color-salahos-teal: #008080;
+
+  --font-salahos: "IBM Plex Mono", "Courier New", Courier, monospace;
+}
+
+/* =========================================================
+ROOT VARIABLES
+========================================================= */
+
+:root {
+  --salahos-black: #000000;
+  --salahos-white: #ffffff;
+
+  --salahos-light: #c0c0c0;
+  --salahos-gray: #808080;
+  --salahos-dark: #404040;
+
+  --salahos-navy: #000080;
+  --salahos-teal: #008080;
+
+  --salahos-font: "IBM Plex Mono", "Courier New", Courier, monospace;
+
+  --salahos-border-width: 1px;
+  --salahos-window-border: 2px;
+
+  /*
+    Six colours and nothing else. Every surface, every border and every state
+    in the system is one of them, which is what keeps a system of this age
+    looking deliberate rather than decorated.
+  */
+  --salahos-surface-raised: inset -1px -1px 0 0 var(--salahos-dark),
+    inset 1px 1px 0 0 var(--salahos-white);
+  --salahos-surface-sunken: inset -1px -1px 0 0 var(--salahos-white),
+    inset 1px 1px 0 0 var(--salahos-gray);
+  --salahos-raised-border: var(--salahos-white) var(--salahos-dark) var(--salahos-dark)
+    var(--salahos-white);
+  --salahos-sunken-border: var(--salahos-gray) var(--salahos-white) var(--salahos-white)
+    var(--salahos-gray);
+
+  /*
+    Motion is short and stepped. A machine of this vintage moved in discrete
+    jumps, and steps() keeps the interface from drifting into eased, modern
+    motion no matter what is being animated.
+  */
+  --salahos-motion-fast: 80ms;
+  --salahos-motion-base: 120ms;
+  --salahos-motion-slow: 160ms;
+  --salahos-ease: steps(2, end);
+  --salahos-ease-soft: linear;
+}
+
+/* =========================================================
+BASE
+========================================================= */
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+html {
+  background: var(--salahos-teal);
+}
+
+body {
+  min-height: 100vh;
+
+  background: var(--salahos-teal);
+  color: var(--salahos-black);
+
+  font-family: var(--salahos-font);
+  font-size: 14px;
+  line-height: 1.35;
+
+  overflow: hidden;
+
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: grayscale;
+
+  text-rendering: geometricPrecision;
+}
+
+/* =========================================================
+RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/*
+  Tailwind's preflight clears list markers, which would leave the feature
+  lists in the applications without any marker at all. The system keeps its own
+  markers so those lists read as lists.
+*/
+ol,
+ul {
+  list-style: disc;
+}
+
+/* =========================================================
+SELECTION
+========================================================= */
+
+::selection {
+  background: var(--salahos-navy);
+  color: var(--salahos-white);
+}
+
+/* =========================================================
+SCROLLBARS
+========================================================= */
+
+* {
+  scrollbar-width: auto;
+  scrollbar-color: var(--salahos-gray) var(--salahos-light);
+}
+
+*::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--salahos-light);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--salahos-gray);
+
+  border-top: 2px solid var(--salahos-white);
+  border-left: 2px solid var(--salahos-white);
+
+  border-right: 2px solid var(--salahos-dark);
+  border-bottom: 2px solid var(--salahos-dark);
+}
+
+*::-webkit-scrollbar-button {
+  width: 16px;
+  height: 16px;
+
+  background: var(--salahos-light);
+
+  border-top: 2px solid var(--salahos-white);
+  border-left: 2px solid var(--salahos-white);
+
+  border-right: 2px solid var(--salahos-dark);
+  border-bottom: 2px solid var(--salahos-dark);
+}
+
+/* =========================================================
+SCREEN
+========================================================= */
+
+/*
+  Everything sits inside one screen-sized box: the shell, the boot sequence
+  and the tube effect. The shell is not the positioning context for the CRT
+  layer, which is why the wrapper exists.
+*/
+.salahos-screen {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+}
+
+.salahos-sr-only {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  margin: -1px;
+  padding: 0;
+  border: 0;
+
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* =========================================================
+WINDOW
+========================================================= */
+
+.salahos-window {
+  background: var(--salahos-light);
+
+  border-top: var(--salahos-window-border) solid var(--salahos-white);
+  border-left: var(--salahos-window-border) solid var(--salahos-white);
+
+  border-right: var(--salahos-window-border) solid var(--salahos-dark);
+  border-bottom: var(--salahos-window-border) solid var(--salahos-dark);
+}
+
+/*
+  A hard, unblurred shadow is how windows of this era separated from the
+  desktop. The focused window casts a black one and the unfocused windows cast
+  a smaller gray one, so the stacking order stays readable without any glow.
+*/
+.salahos-window {
+  box-shadow: 1px 1px 0 0 var(--salahos-dark);
+
+  transition: box-shadow var(--salahos-motion-fast) var(--salahos-ease-soft);
+}
+
+.salahos-window.is-focused {
+  box-shadow: 2px 2px 0 0 var(--salahos-black);
+}
+
+/* =========================================================
+WINDOW TITLE BAR
+========================================================= */
+
+.salahos-titlebar {
+  display: flex;
+  align-items: center;
+
+  flex: 0 0 auto;
+
+  min-height: 20px;
+  padding: 1px 2px 1px 4px;
+
+  background: var(--salahos-navy);
+  color: var(--salahos-white);
+
+  font-size: 13px;
+  font-weight: 700;
+
+  user-select: none;
+
+  transition: background-color var(--salahos-motion-fast) var(--salahos-ease-soft),
+    color var(--salahos-motion-fast) var(--salahos-ease-soft);
+}
+
+/*
+  An unfocused caption is flat light gray with black text rather than a
+  hatched or dimmed navy one. It keeps the title readable when the window
+  loses focus, and it separates active from inactive through surface and
+  contrast instead of through a texture that competes with the text.
+*/
+.salahos-titlebar.inactive {
+  background: var(--salahos-light);
+  color: var(--salahos-black);
+
+  border-bottom: 1px solid var(--salahos-gray);
+}
+
+.salahos-window-title {
+  flex: 1 1 auto;
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.salahos-titlebar {
+  cursor: move;
+  touch-action: none;
+}
+
+.salahos-application-window.is-maximized .salahos-titlebar {
+  cursor: default;
+}
+
+.salahos-window-controls {
+  display: flex;
+  gap: 2px;
+
+  flex: 0 0 auto;
+}
+
+/* =========================================================
+WINDOW CONTROL
+========================================================= */
+
+.salahos-window-control {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 16px;
+  height: 15px;
+
+  padding: 0;
+
+  background: var(--salahos-light);
+  color: var(--salahos-black);
+
+  border: 1px solid;
+  border-color: var(--salahos-raised-border);
+
+  line-height: 1;
+
+  cursor: default;
+  user-select: none;
+
+  transition: background-color var(--salahos-motion-fast) var(--salahos-ease-soft);
+}
+
+.salahos-window-control:hover {
+  background: var(--salahos-white);
+}
+
+.salahos-window-control:active {
+  border-color: var(--salahos-sunken-border);
+}
+
+/*
+  The three caption glyphs are drawn rather than typed. A box drawing
+  character depends on whatever font happens to be installed, while these stay
+  the same pixel shape on every machine.
+*/
+.salahos-glyph-minimize {
+  width: 8px;
+  height: 2px;
+
+  background: currentColor;
+}
+
+.salahos-glyph-close {
+  position: relative;
+
+  width: 10px;
+  height: 10px;
+}
+
+.salahos-glyph-close::before,
+.salahos-glyph-close::after {
+  content: "";
+
+  position: absolute;
+  left: 4px;
+  top: -1px;
+
+  width: 2px;
+  height: 12px;
+
+  background: currentColor;
+}
+
+.salahos-glyph-close::before {
+  transform: rotate(45deg);
+}
+
+.salahos-glyph-close::after {
+  transform: rotate(-45deg);
+}
+
+.salahos-glyph-maximize {
+  width: 10px;
+  height: 9px;
+
+  border: 1px solid currentColor;
+  border-top-width: 3px;
+}
+
+.salahos-glyph-restore {
+  position: relative;
+
+  width: 10px;
+  height: 9px;
+
+  border: 1px solid currentColor;
+}
+
+/*
+  The back box of the restore glyph is masked with the control's own surface
+  colour, so only the two offset outlines remain.
+*/
+.salahos-glyph-restore::after {
+  content: "";
+
+  position: absolute;
+  right: -1px;
+  bottom: 2px;
+
+  width: 8px;
+  height: 6px;
+
+  background: var(--salahos-light);
+  border: 1px solid currentColor;
+}
+
+.salahos-window-control:hover .salahos-glyph-restore::after {
+  background: var(--salahos-white);
+}
+
+.salahos-window-control:active .salahos-glyph-restore::after {
+  background: var(--salahos-light);
+}
+
+/* =========================================================
+WINDOW PLACEMENT
+========================================================= */
+
+.salahos-application-window {
+  position: absolute;
+
+  display: flex;
+  flex-direction: column;
+
+  width: min(560px, calc(100% - 24px));
+  height: min(520px, calc(100% - 24px));
+
+  /*
+    The frame writes its own offset into these two variables, so the window can
+    measure what is left below and beside itself. A window therefore cannot be
+    opened or dragged far enough to slide under the command bar or the status
+    bar, whatever the viewport does, and no runtime measurement is needed.
+  */
+  max-width: calc(100% - max(var(--salahos-window-offset-x, 0px), 24px) - 8px);
+  max-height: calc(100% - max(var(--salahos-window-offset-y, 0px), 24px) - 8px);
+
+  overflow: hidden;
+
+  /*
+    Maximizing and restoring is the one movement worth animating, and it is
+    animated as geometry rather than as a transform so the window really does
+    resize into the desktop.
+  */
+  transition: left var(--salahos-motion-base) var(--salahos-ease),
+    top var(--salahos-motion-base) var(--salahos-ease),
+    width var(--salahos-motion-base) var(--salahos-ease),
+    height var(--salahos-motion-base) var(--salahos-ease);
+}
+
+/*
+  System dialogs are small windows without a maximize control.
+*/
+.salahos-application-window.is-dialog {
+  width: min(400px, calc(100% - 24px));
+  height: min(300px, calc(100% - 24px));
+}
+
+.salahos-application-window.is-maximized {
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.salahos-application-window.is-dragging {
+  user-select: none;
+
+  /* A window must track the pointer exactly, never chase it a frame behind. */
+  transition: none;
+}
+
+/* =========================================================
+WINDOW MOTION
+========================================================= */
+
+@keyframes salahos-window-open {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes salahos-window-close {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@keyframes salahos-window-minimize {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.2) translateY(70%);
+  }
+}
+
+.salahos-application-window {
+  animation: salahos-window-open var(--salahos-motion-base) var(--salahos-ease) both;
+}
+
+.salahos-application-window[data-exiting="close"] {
+  animation: salahos-window-close 110ms var(--salahos-ease) both;
+}
+
+.salahos-application-window[data-exiting="minimize"] {
+  animation: salahos-window-minimize 140ms var(--salahos-ease) both;
+}
+
+/* =========================================================
+COMMAND BAR
+========================================================= */
+
+.salahos-command-bar {
+  display: flex;
+  align-items: stretch;
+
+  min-height: 26px;
+
+  background: var(--salahos-light);
+  color: var(--salahos-black);
+
+  border-bottom: 1px solid var(--salahos-dark);
+
+  user-select: none;
+
+  white-space: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.salahos-command-bar::-webkit-scrollbar {
+  display: none;
+}
+
+button.salahos-command-item {
+  background: transparent;
+  color: inherit;
+  border: 0;
+  font: inherit;
+  text-align: left;
+}
+
+.salahos-command-item {
+  display: inline-flex;
+  align-items: center;
+
+  flex: 0 0 auto;
+
+  padding: 0 9px;
+
+  cursor: default;
+
+  transition: background-color var(--salahos-motion-fast) var(--salahos-ease-soft),
+    color var(--salahos-motion-fast) var(--salahos-ease-soft);
+}
+
+.salahos-command-item:hover,
+.salahos-command-item[data-active="true"] {
+  background: var(--salahos-navy);
+  color: var(--salahos-white);
+}
+
+/* =========================================================
+MENU
+========================================================= */
+
+@keyframes salahos-menu-open {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.salahos-menu {
+  position: fixed;
+  z-index: 2000;
+
+  min-width: 200px;
+  max-width: min(260px, calc(100vw - 8px));
+  max-height: calc(100vh - 8px);
+
+  padding: 2px;
+  overflow-y: auto;
+
+  background: var(--salahos-light);
+
+  border-top: 2px solid var(--salahos-white);
+  border-left: 2px solid var(--salahos-white);
+
+  border-right: 2px solid var(--salahos-dark);
+  border-bottom: 2px solid var(--salahos-dark);
+
+  box-shadow: 2px 2px 0 0 var(--salahos-black);
+
+  user-select: none;
+
+  animation: salahos-menu-open var(--salahos-motion-fast) var(--salahos-ease) both;
+}
+
+.salahos-menu-separator {
+  height: 0;
+  margin: 3px 2px;
+
+  border-top: 1px solid var(--salahos-gray);
+  border-bottom: 1px solid var(--salahos-white);
+}
+
+.salahos-menu-item {
+  display: flex;
+
+  align-items: center;
+
+  width: 100%;
+
+  padding: 4px 6px;
+
+  background: transparent;
+  color: var(--salahos-black);
+
+  border: 0;
+
+  text-align: left;
+
+  cursor: default;
+}
+
+.salahos-menu-item-mark {
+  flex: 0 0 auto;
+
+  width: 14px;
+
+  font-size: 12px;
+  line-height: 1;
+}
+
+.salahos-menu-item-label {
+  flex: 1 1 auto;
+}
+
+/*
+  Menu item highlight states:
+  - data-selected is the keyboard selection, set by MenuPanel only once the
+    keyboard is actually used. :focus is deliberately never painted, because
+    the panel focuses the first item on open and browsers disagree about
+    whether that counts as :focus-visible (Firefox says yes, which left item
+    one highlighted for the whole time the menu was open).
+  - :hover is declared last so the pointer always wins when it is over an
+    item, which is what "the hover highlight must move" means.
+*/
+.salahos-menu-item[data-selected="true"] {
+  background: var(--salahos-navy);
+  color: var(--salahos-white);
+
+  outline: 1px dotted var(--salahos-white);
+  outline-offset: -3px;
+}
+
+.salahos-menu-item:hover:not(:disabled) {
+  background: var(--salahos-navy);
+  color: var(--salahos-white);
+}
+
+.salahos-menu-item:focus-visible {
+  outline: 1px dotted var(--salahos-white);
+  outline-offset: -3px;
+}
+
+.salahos-menu-item:disabled {
+  color: var(--salahos-dark);
+  cursor: default;
+}
+
+/* =========================================================
+APP SHELL LAYOUT
+========================================================= */
+
+.salahos-app-shell {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 320px;
+}
+
+.salahos-top-bar {
+  flex: 0 0 auto;
+}
+
+.salahos-desktop {
+  position: relative;
+
+  flex: 1 1 auto;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+
+  background: var(--salahos-teal);
+
+  overflow: hidden;
+}
+
+/* =========================================================
+DESKTOP ICONS
+========================================================= */
+
+.salahos-desktop-icons {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+
+  max-height: calc(100% - 28px);
+}
+
+/*
+  Arrange Icons fills the desktop downwards, then starts a new column,
+  which is how a classic desktop tidies its icons.
+*/
+.salahos-desktop-icons.is-arranged {
+  bottom: 14px;
+
+  height: auto;
+  max-height: none;
+
+  flex-flow: column wrap;
+  align-content: flex-start;
+  justify-content: flex-start;
+
+  overflow: hidden;
+}
+
+.salahos-desktop-icons.is-arranged .salahos-desktop-icon {
+  flex: 0 0 auto;
+}
+
+.salahos-desktop-icon {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+
+  width: 76px;
+  min-height: 70px;
+  padding: 3px 2px 4px;
+
+  background: transparent;
+  color: var(--salahos-white);
+
+  border: 0;
+  cursor: default;
+  text-align: center;
+
+  transition: background-color var(--salahos-motion-fast) var(--salahos-ease-soft);
+}
+
+/*
+  The label wraps to two lines instead of growing, and the .exe suffix is kept
+  on its own line by the component, so "Experience" over ".exe" is a readable
+  break rather than a mid-word one. The fixed height keeps every cell the same
+  size whatever the name.
+*/
+.salahos-desktop-icon-label {
+  display: block;
+
+  max-width: 72px;
+
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.salahos-desktop-icon-name,
+.salahos-desktop-icon-extension {
+  display: block;
+}
+
+.salahos-desktop-icon:hover,
+.salahos-desktop-icon:focus-visible {
+  background: var(--salahos-navy);
+}
+
+.salahos-desktop-icon:focus-visible {
+  outline: 1px dotted var(--salahos-white);
+  outline-offset: -2px;
+}
+
+.salahos-desktop-icon-art {
+  display: block;
+
+  flex: 0 0 auto;
+
+  width: 32px;
+  height: 32px;
+}
+
+/*
+  A pip in the corner of the cell marks an application that is already running,
+  which is the only cue a classic desktop gave and the only one needed here.
+*/
+.salahos-desktop-icon-flag {
+  position: absolute;
+  left: 3px;
+  top: 30px;
+
+  width: 3px;
+  height: 3px;
+
+  background: var(--salahos-navy);
+}
+
+.salahos-desktop-icon:hover .salahos-desktop-icon-flag,
+.salahos-desktop-icon:focus-visible .salahos-desktop-icon-flag {
+  background: var(--salahos-white);
+}
+
+/* =========================================================
+STATUS BAR
+========================================================= */
+
+.salahos-status-bar {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+
+  flex: 0 0 auto;
+  height: 30px;
+  padding: 3px 4px;
+
+  background: var(--salahos-light);
+  color: var(--salahos-black);
+
+  border-top: 1px solid var(--salahos-white);
+
+  overflow: hidden;
+}
+
+/*
+  The task list is the only part allowed to give up room. It sits in a sunken
+  well, and because it holds a minimum width per button the list degrades by
+  shortening labels rather than by pushing the clock and the social links off
+  the edge of the window.
+*/
+.salahos-status-apps {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+
+  flex: 1 1 auto;
+  min-width: 0;
+
+  padding: 1px;
+  overflow: hidden;
+
+  background: var(--salahos-light);
+  border: 1px solid;
+  border-color: var(--salahos-sunken-border);
+}
+
+.salahos-status-item {
+  flex: 0 1 auto;
+  min-width: 42px;
+  max-width: 150px;
+
+  display: inline-flex;
+  align-items: center;
+
+  padding: 0 6px;
+
+  background: var(--salahos-light);
+  border: 1px solid transparent;
+  color: var(--salahos-black);
+
+  font-size: 12px;
+
+  cursor: default;
+  text-align: left;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  transition: background-color var(--salahos-motion-fast) var(--salahos-ease-soft),
+    color var(--salahos-motion-fast) var(--salahos-ease-soft);
+}
+
+.salahos-status-item:hover,
+.salahos-status-item:focus-visible {
+  background: var(--salahos-navy);
+  color: var(--salahos-white);
+}
+
+.salahos-status-item:focus-visible {
+  outline: 1px dotted var(--salahos-white);
+  outline-offset: -3px;
+}
+
+/*
+  The focused window's task button is pressed, the way a task list on a real
+  desktop shows the current item. Hover stays flat, so the two states can
+  never be mistaken for one another.
+*/
+.salahos-status-item[data-active="true"] {
+  background: var(--salahos-navy);
+  color: var(--salahos-white);
+
+  font-weight: 700;
+  border-color: var(--salahos-black);
+
+  box-shadow: inset 1px 1px 0 0 var(--salahos-gray);
+}
+
+.salahos-status-item[data-minimized="true"] {
+  color: var(--salahos-dark);
+}
+
+.salahos-status-item[data-minimized="true"]::before {
+  content: "_ ";
+}
+
+/*
+  The clock and the social links must never be squeezed or pushed away, so
+  they hold their natural size and the task list absorbs the difference.
+*/
+.salahos-status-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  flex: 0 0 auto;
+
+  padding-left: 6px;
+  border-left: 1px solid var(--salahos-gray);
+}
+
+/*
+  Status bar links share the flat retro surface of the task buttons.
+  They are anchors, so they are keyboard focusable and open in a new tab.
+*/
+.salahos-status-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.salahos-status-link {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 0 5px;
+
+  background: var(--salahos-light);
+  border: 1px solid transparent;
+  color: var(--salahos-black);
+
+  font-size: 12px;
+
+  cursor: default;
+  text-decoration: none;
+
+  transition: background-color var(--salahos-motion-fast) var(--salahos-ease-soft),
+    color var(--salahos-motion-fast) var(--salahos-ease-soft);
+}
+
+.salahos-status-link:hover,
+.salahos-status-link:focus-visible {
+  background: var(--salahos-navy);
+  color: var(--salahos-white);
+}
+
+.salahos-status-link:focus-visible {
+  outline: 1px dotted var(--salahos-white);
+  outline-offset: -2px;
+}
+
+.salahos-status-clock {
+  padding: 0 5px;
+
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+APPLICATION CONTENT
+========================================================= */
+
+.salahos-detail-content,
+.salahos-profile-content {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  overflow: auto;
+
+  padding: 14px 16px;
+}
+
+.salahos-detail-section {
+  padding: 12px 0;
+
+  border-bottom: 1px solid var(--salahos-gray);
+}
+
+.salahos-detail-section:first-child {
+  padding-top: 0;
+}
+
+.salahos-detail-section:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.salahos-detail-section h2,
+.salahos-detail-section h3,
+.salahos-detail-section p {
+  margin: 0;
+}
+
+/*
+  Section headings are uppercased here rather than in the data, so every
+  application presents its sections the same way without a single title in the
+  portfolio having to be rewritten.
+*/
+.salahos-detail-section h2 {
+  margin-bottom: 8px;
+
+  color: var(--salahos-navy);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.salahos-detail-section h3 {
+  margin-top: 10px;
+
+  color: var(--salahos-dark);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.salahos-detail-section > p:first-of-type + p,
+.salahos-detail-section p + p {
+  margin-top: 5px;
+}
+
+.salahos-detail-list {
+  margin: 8px 0 0;
+  padding-left: 20px;
+
+  list-style: square;
+}
+
+.salahos-detail-list li {
+  margin-top: 3px;
+}
+
+.salahos-detail-list li::marker {
+  color: var(--salahos-navy);
+}
+
+.salahos-detail-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 10px;
+}
+
+.salahos-detail-links a {
+  color: var(--salahos-navy);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.salahos-detail-links a:hover,
+.salahos-detail-links a:focus-visible {
+  background: var(--salahos-navy);
+  color: var(--salahos-white);
+  text-decoration: none;
+}
+
+.salahos-detail-group + .salahos-detail-group {
+  margin-top: 8px;
+}
+
+/* =========================================================
+DIALOG ACTIONS
+========================================================= */
+
+.salahos-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  flex: 0 0 auto;
+
+  padding: 8px 10px;
+
+  border-top: 1px solid var(--salahos-gray);
+}
+
+.salahos-dialog-button {
+  min-width: 68px;
+
+  padding: 3px 12px;
+
+  background: var(--salahos-light);
+  color: var(--salahos-black);
+
+  border: 1px solid;
+  border-color: var(--salahos-raised-border);
+
+  cursor: default;
+
+  transition: background-color var(--salahos-motion-fast) var(--salahos-ease-soft);
+}
+
+.salahos-dialog-button:hover {
+  background: var(--salahos-white);
+}
+
+.salahos-dialog-button:active {
+  border-color: var(--salahos-sunken-border);
+}
+
+/* =========================================================
+SALAH.EXE
+========================================================= */
+
+.salahos-profile-heading {
+  padding-bottom: 12px;
+
+  border-bottom: 1px solid var(--salahos-gray);
+}
+
+.salahos-profile-heading h1,
+.salahos-profile-heading p,
+.salahos-profile-section h2,
+.salahos-profile-section p {
+  margin: 0;
+}
+
+.salahos-profile-heading h1 {
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.salahos-profile-heading p {
+  margin-top: 4px;
+}
+
+.salahos-profile-section {
+  padding: 12px 0;
+
+  border-bottom: 1px solid var(--salahos-gray);
+}
+
+.salahos-profile-section:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.salahos-profile-section h2 {
+  margin-bottom: 7px;
+
+  color: var(--salahos-navy);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.salahos-profile-section p + p {
+  margin-top: 5px;
+}
+
+/* =========================================================
+SYSTEM DIALOG CONTENT
+========================================================= */
+
+.salahos-about {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+
+  border-bottom: 1px solid var(--salahos-gray);
+}
+
+.salahos-about-title {
+  margin: 0;
+
+  color: var(--salahos-navy);
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.salahos-about-tagline {
+  margin: 5px 0 0;
+
+  color: var(--salahos-dark);
+}
+
+.salahos-shortcut {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.salahos-shortcut + .salahos-shortcut {
+  margin-top: 5px;
+}
+
+/*
+  A shortcut key is a sunken cap: dark on the top and left, light on the
+  bottom and right, so it reads as pressed into the page.
+*/
+.salahos-shortcut-key {
+  flex: 0 0 auto;
+
+  min-width: 148px;
+
+  padding: 1px 5px;
+
+  background: var(--salahos-white);
+  border: 1px solid;
+  border-color: var(--salahos-sunken-border);
+
+  font-size: 12px;
+}
+
+/* =========================================================
+TERMINAL
+========================================================= */
+
+.salahos-terminal {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  padding: 10px 12px;
+
+  background: var(--salahos-black);
+  color: var(--salahos-white);
+
+  font-family: var(--salahos-font);
+  font-size: 13px;
+  line-height: 1.45;
+
+  overflow: auto;
+  overflow-wrap: break-word;
+
+  white-space: pre-wrap;
+  cursor: text;
+  user-select: text;
+}
+
+/*
+  The input paints no ring of its own, the way a console prompt does not, so
+  the whole terminal screen takes the indicator instead.
+*/
+.salahos-terminal:focus-within {
+  outline: 1px dotted var(--salahos-white);
+  outline-offset: -2px;
+}
+
+.salahos-terminal-line {
+  min-height: 1.45em;
+}
+
+/*
+  Three levels of output. Fresh output is the screen colour, a heading is
+  bright and bold, and anything the system reports back is stepped down to
+  light gray, which separates the command and its result from the result
+  itself without adding a colour to the system.
+*/
+.salahos-terminal-line[data-kind="echo"] {
+  color: var(--salahos-light);
+}
+
+.salahos-terminal-line[data-kind="banner"] {
+  color: var(--salahos-light);
+}
+
+.salahos-terminal-line[data-kind="heading"] {
+  font-weight: 700;
+}
+
+.salahos-terminal-line[data-kind="error"] {
+  color: var(--salahos-light);
+}
+
+.salahos-terminal-prompt {
+  display: flex;
+  gap: 6px;
+}
+
+.salahos-terminal-prompt-label {
+  flex: 0 0 auto;
+
+  color: var(--salahos-light);
+}
+
+.salahos-terminal-input {
+  flex: 1 1 auto;
+  min-width: 0;
+
+  padding: 0;
+
+  background: transparent;
+  color: var(--salahos-white);
+
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+
+  font: inherit;
+  caret-color: var(--salahos-white);
+}
+
+.salahos-terminal-input:focus,
+.salahos-terminal-input:focus-visible {
+  outline: none;
+}
+
+.salahos-terminal::selection {
+  background: var(--salahos-white);
+  color: var(--salahos-black);
+}
+
+/* =========================================================
+FOCUS
+========================================================= */
+
+:focus-visible {
+  outline: 1px dotted var(--salahos-black);
+  outline-offset: 1px;
+}
+
+/*
+  A black ring disappears on the navy caption, on the black terminal and on a
+  navy highlight, so those surfaces get the white one instead.
+*/
+.salahos-titlebar :focus-visible,
+.salahos-terminal :focus-visible,
+.salahos-menu-item:focus-visible,
+.salahos-status-item:focus-visible,
+.salahos-status-link:focus-visible {
+  outline-color: var(--salahos-white);
+}
+
+/* =========================================================
+BOOT
+========================================================= */
+
+@keyframes salahos-boot-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes salahos-boot-cursor {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.salahos-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 20px 22px;
+
+  background: var(--salahos-black);
+  color: var(--salahos-light);
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  /* A command line has no pointer of its own. */
+  cursor: none;
+
+  animation: salahos-boot-in var(--salahos-motion-fast) var(--salahos-ease) both;
+
+  transition: opacity var(--salahos-motion-base) var(--salahos-ease-soft);
+}
+
+.salahos-boot.is-leaving {
+  opacity: 0;
+}
+
+.salahos-boot-screen {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.salahos-boot-line {
+  margin: 0;
+
+  white-space: pre-wrap;
+}
+
+.salahos-boot-prompt {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.salahos-boot-cursor {
+  width: 8px;
+  height: 14px;
+
+  background: var(--salahos-light);
+
+  animation: salahos-boot-cursor 900ms steps(1, end) infinite;
+}
+
+.salahos-boot-skip {
+  margin: 0;
+
+  color: var(--salahos-dark);
+  font-size: 12px;
+}
+
+/* =========================================================
+CRT
+=========================================================
+
+  The tube effect is two fixed layers over the whole screen and nothing else:
+  a scanline pattern and a vignetted brightness wobble. Both are deliberately
+  near the threshold of perception. The scanlines darken by 5.5 percent on one
+  row in three, and the vignette only reaches 16 percent in the corners, so the
+  display reads as a display rather than as a filter sitting on the interface.
+
+  Only the wobble animates, it animates opacity alone so it stays on the
+  compositor, and it is removed entirely under reduced motion.
+========================================================= */
+
+.salahos-crt {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  pointer-events: none;
+}
+
+.salahos-crt::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.055) 2px,
+    rgba(0, 0, 0, 0.055) 3px
+  );
+}
+
+.salahos-crt::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background-image: radial-gradient(
+    130% 130% at 50% 50%,
+    rgba(0, 0, 0, 0) 55%,
+    rgba(0, 0, 0, 0.16) 100%
+  );
+
+  animation: salahos-crt-flicker 9s steps(1, end) infinite;
+}
+
+@keyframes salahos-crt-flicker {
+  0%,
+  46% {
+    opacity: 1;
+  }
+  47%,
+  52% {
+    opacity: 0.86;
+  }
+  53%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /*
+    The two effects that would otherwise keep running forever are removed
+    outright rather than shortened, so nothing on the page is still repainting
+    once the preference is set.
+  */
+  .salahos-crt::after,
+  .salahos-boot-cursor {
+    animation: none;
+  }
+}
+
+/* =========================================================
+MOBILE
+========================================================= */
+
+@media (max-width: 640px) {
+  body {
+    font-size: 13px;
+  }
+
+  /*
+    Eight icons in one column do not fit a phone, so the desktop keeps the
+    icons and drops the imitation: they wrap into rows instead of becoming
+    unreachable.
+  */
+  .salahos-desktop-icons {
+    right: 8px;
+
+    flex-flow: row wrap;
+    align-content: flex-start;
+    gap: 2px;
+  }
+
+  .salahos-desktop-icons.is-arranged {
+    right: auto;
+    bottom: auto;
+
+    flex-flow: row wrap;
+  }
+
+  /*
+    A window on a phone is a sheet: it fills the width, and it runs from below
+    the icon rows to the bottom of the surface. useContainedWindowPosition seats
+    it there and publishes the offset it was given, so the height is read back
+    out of that rather than assumed, which keeps the sheet clear of the launcher
+    at any width and however the icons are arranged.
+
+    The base cap subtracts a window's own offset so a floating window cannot
+    reach the right edge. That is right for a window at a position and wrong for
+    a sheet that is already inset, so the caps are restated to match the size
+    rules here instead of shaving them.
+  */
+  .salahos-application-window {
+    width: calc(100% - 16px);
+    max-width: calc(100% - 16px);
+
+    height: calc(100% - var(--salahos-window-offset-y, 20px) - 12px);
+    max-height: calc(100% - var(--salahos-window-offset-y, 20px) - 12px);
+  }
+
+  .salahos-application-window.is-dialog {
+    width: calc(100% - 16px);
+    max-width: calc(100% - 16px);
+
+    height: min(320px, calc(100% - var(--salahos-window-offset-y, 20px) - 12px));
+  }
+
+  /*
+    A sheet fills the surface, so its caption does not move it. The pointer
+    cursor is the cue that would invite the drag, so it goes too.
+  */
+  .salahos-application-window .salahos-titlebar {
+    cursor: default;
+  }
+
+  .salahos-detail-content,
+  .salahos-profile-content {
+    padding: 12px;
+  }
+
+  .salahos-status-bar {
+    padding-inline: 2px;
+  }
+
+  .salahos-status-item {
+    min-width: 36px;
+    max-width: 110px;
+  }
+
+  .salahos-status-actions {
+    gap: 0;
+    padding-left: 4px;
+  }
+
+  .salahos-status-link,
+  .salahos-status-clock {
+    padding-inline: 3px;
+  }
+
+  .salahos-shortcut-key {
+    min-width: 112px;
+  }
+
+  .salahos-terminal {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .salahos-boot {
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+NARROW SCREENS
+========================================================= */
+
+@media (max-width: 420px) {
+  .salahos-command-item {
+    padding: 0 6px;
+    font-size: 12px;
+  }
+
+  .salahos-desktop-icon {
+    width: 68px;
+    min-height: 66px;
+  }
+
+  .salahos-desktop-icon-label {
+    max-width: 64px;
+    font-size: 10px;
+  }
+
+  .salahos-desktop-icon-art {
+    width: 28px;
+    height: 28px;
+  }
+
+  .salahos-desktop-icon-flag {
+    top: 26px;
+  }
+
+  .salahos-shortcut {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+
+  .salahos-shortcut-key {
+    min-width: 0;
+  }
+}
