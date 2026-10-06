@@ -38,6 +38,33 @@ async function bootLineCounts(page: Page): Promise<number[]> {
 }
 
 /*
+  The same observer, recording the rendered text of the boot screen instead of
+  a line count. Installed before the application boots so nothing is missed.
+*/
+async function recordBootText(page: Page) {
+  await page.addInitScript(() => {
+    const seen: string[] = [];
+    (window as unknown as { bootText: string[] }).bootText = seen;
+
+    const sample = () => {
+      const screen = document.querySelector(".salahos-boot-screen");
+      const text = screen?.textContent ?? "";
+
+      /* The last state is empty: the screen unmounts and there is nothing left. */
+      if (seen.at(-1) !== text) seen.push(text);
+    };
+
+    new MutationObserver(sample).observe(document, { childList: true, subtree: true });
+  });
+}
+
+async function bootText(page: Page): Promise<string[]> {
+  return page.evaluate(
+    () => (window as unknown as { bootText: string[] }).bootText ?? [],
+  );
+}
+
+/*
   The boot sequence is a staged POST output. It finishes on its own, any key
   except Tab skips it, and under reduced motion it shows everything at once and
   completes quickly. A keyboard-only visitor must never be held on it, which is
@@ -87,9 +114,27 @@ test.describe("boot", () => {
   });
 
   test("shows the expected self-test output", async ({ page }) => {
+    /*
+      Recorded rather than polled. The finished output is on screen for roughly
+      420ms - the hold after the last line - before the layer unmounts, which is
+      too narrow a window to assert against on a loaded machine. The observer
+      sees every rendered state, so the assertion no longer depends on how fast
+      the host is or how the poll happens to be scheduled.
+    */
+    await recordBootText(page);
+
     await page.goto("/");
-    await expect(page.locator(".salahos-boot-screen")).toContainText("Memory Test: 640K OK");
-    await expect(page.locator(".salahos-boot-screen")).toContainText("Loading Salah.exe");
+    await waitForDesktop(page);
+
+    /*
+      Lines only ever accumulate, so the last non-empty state is the fully
+      revealed output. The trailing empty entry is the unmount itself.
+    */
+    const revealed = (await bootText(page)).filter((text) => text.length > 0);
+    const complete = revealed.at(-1) ?? "";
+
+    expect(complete).toContain("Memory Test: 640K OK");
+    expect(complete).toContain("Loading Salah.exe");
   });
 
   test("announces the boot sequence to assistive technology", async ({ page }) => {
