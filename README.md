@@ -32,10 +32,15 @@ entirely with CSS.
 **Boot.** A short POST-style sequence runs on load, and any key press skips it.
 
 **Desktop.** Eight applications, arranged in a cascade so an unopened desktop
-stays readable. Every icon is drawn from a 16×16 pixel map as merged SVG
+stays readable. Every icon is drawn from a 16x16 pixel map as merged SVG
 rectangles, with no image assets. Icons open on a single click, and a right
 click opens a context menu. `View ▸ Arrange Icons` sorts and upper-cases them
 the way a real desktop does.
+
+**Wallpaper.** A slate desktop with a strip of activity bars along the bottom
+edge, drawn as pixel art by the same renderer the icons use. The artwork repeats
+horizontally only, so the bars rise from the real bottom of the surface instead
+of banding down the screen.
 
 **Windows.** Open, close, minimize, restore, maximize, drag, and raise on
 focus. Windows cannot be dragged somewhere their title bar cannot be grabbed
@@ -55,7 +60,9 @@ disagree about which programs exist. Scrollback history works with `ArrowUp` /
 
 **Task bar and status bar.** Task buttons for every open window, the clock, and
 the social links (LinkedIn, GitHub, Codeforces). There is no theme toggle: the
-palette is a deliberate six-colour system with a single light scheme.
+palette is a deliberate six-colour system with a single light scheme. The
+wallpaper's three extra shades are the only departure from it, and only because
+the white icon labels have to stay readable on top of them.
 
 **Content.** Profile, education, skills, experience, projects and contact
 details, all sourced from `src/data/` so the terminal, the windows and the
@@ -108,7 +115,7 @@ npm run preview
 
 ## Testing
 
-**Unit tests** (`npm test`) — 142 tests across 5 files, plain node
+**Unit tests** (`npm test`) — 155 tests across 6 files, plain node
 environment, no DOM and no testing library:
 
 | File | Covers |
@@ -117,15 +124,18 @@ environment, no DOM and no testing library:
 | `src/features/terminal/terminalHistory.test.ts` | recall boundaries, repeats, round-tripping |
 | `src/hooks/useWindowManager.test.ts` | every reducer action and the invariants between them |
 | `src/features/terminal/terminalCommands.test.ts` | the command registry, `dir` layout, unknown input |
-| `src/features/desktop/desktopIconPixels.test.ts` | 16×16 grids, palette, bounds, caching |
+| `src/features/desktop/desktopIconPixels.test.ts` | 16x16 grids, palette, bounds, caching |
+| `src/features/desktop/desktopWallpaper.test.ts` | the bar grid, palette contrast, tiling seams, node count |
 
-**Browser tests** (`npm run test:browser`) — 173 tests across 8 specs in
+**Browser tests** (`npm run test:browser`) — 182 tests across 10 specs in
 `tests/browser/`, run against a real build in Chromium and Firefox:
 
 | Spec | Covers |
 | --- | --- |
 | `boot.spec.ts` | the sequence, skipping, reduced motion |
+| `assets.spec.ts` | built asset URLs, the base path, the favicon |
 | `desktop.spec.ts` | icons, labels, artwork, context menu, arranging |
+| `wallpaper.spec.ts` | strip placement, layering under windows, click pass-through |
 | `windows.spec.ts` | lifecycle, focus, stacking, dragging, dialogs, show desktop |
 | `menus.spec.ts` | contents of every menu, dismissal, keyboard navigation |
 | `terminal.spec.ts` | prompt, commands, history, clearing, exit |
@@ -148,14 +158,14 @@ src/
   features/
     apps/                 portfolio and system application content
     boot/                 the boot sequence
-    desktop/              desktop surface, icons, command bar, status bar
+    desktop/              desktop surface, icons, wallpaper, command bar, status bar
     menu/                 menu definitions and the menu panel
     salah/                the Salah.exe landing application
     terminal/             prompt, parser, history, command registry
     window/               the window frame and its controls
   hooks/                  useWindowManager, useDraggableWindow
   types/                  shared types
-  utils/
+  utils/pixelArt.ts       the bitmap renderer shared by the icons and wallpaper
 tests/browser/            Playwright specs and shared helpers
 ```
 
@@ -201,20 +211,17 @@ Deploy the contents of `dist/` to any static host — GitHub Pages, Netlify,
 Vercel, Cloudflare Pages, or a plain object store behind a CDN. No rewrite
 rules are needed, because there is no router: every path is served as built.
 
-**Deploying to a sub-path.** `vite.config.ts` sets no `base`, so assets are
-emitted as absolute `/assets/...`. Hosting the site at something like
-`https://example.com/portfolio-os/` needs:
+**The base path is the repository name.** The site is published as a GitHub
+Pages project site at `https://MrSalah1.github.io/portfolio-os/`, so
+`vite.config.ts` sets `base: "/portfolio-os/"` and assets are emitted under
+that prefix. Without it the bundle and favicon resolve to paths that 404 on
+Pages and the page renders blank — an HTML document that loads perfectly and
+shows nothing. Renaming the repository means changing `base` to match, and
+there is a browser test asserting the built asset paths for exactly this reason.
 
-```ts
-export default defineConfig({
-  base: "/portfolio-os/",
-  plugins: [react(), tailwindcss()],
-})
-```
-
-`og:url` and `og:image` are intentionally absent from `index.html`: they need
-a real domain and a share image, which do not exist yet. Add them once the site
-has an address.
+`og:url` and `og:image` are intentionally absent from `index.html`. The site now
+has an address, so `og:url` could be added; `og:image` still needs a
+purpose-made share image, and guessing one would publish a broken preview.
 
 ## Notes for maintainers
 
@@ -228,6 +235,20 @@ duplicates tokens already declared in `:root`.
 Removing it is a real cleanup, but it is a visual-risk change: preflight
 normalises more than the project currently overrides. If you remove it, diff the
 built CSS and check every list, button, input and heading.
+
+**The wallpaper is constrained by the icon labels.** `desktopWallpaperPixels.ts`
+carries three shades that are not part of the six-colour palette, because the
+desktop icon labels are white and sit directly on the wallpaper with no
+background of their own. Any shade brighter than about `#527a7a` drops below
+the 4.5:1 contrast WCAG asks for with white text and the labels become hard to
+read — which is an accessibility failure, not just a taste question, so
+`desktopWallpaper.test.ts` measures the luminance and fails the build rather
+than leaving it to be spotted.
+
+That same file also asserts the artwork tiles without a seam, which means a bar
+is never cut in half at the tile boundary. If the bar pitch or the tile width
+changes, the pitch still has to divide the tile evenly and the last columns
+still have to be gap.
 
 **A `date` command exists.** The terminal's `date` command is intentionally
 hard-coded, so a stale build can never show the wrong build date.

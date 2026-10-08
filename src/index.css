@@ -13,7 +13,7 @@ SALAHOS DESIGN TOKENS
   --color-salahos-dark: #404040;
 
   --color-salahos-navy: #000080;
-  --color-salahos-teal: #008080;
+  --color-salahos-desktop-bg: #2f4f4f;
 
   --font-salahos: "IBM Plex Mono", "Courier New", Courier, monospace;
 }
@@ -31,7 +31,17 @@ ROOT VARIABLES
   --salahos-dark: #404040;
 
   --salahos-navy: #000080;
-  --salahos-teal: #008080;
+
+  /*
+    The desktop surface, and the backdrop behind it. Not a VGA colour: slate was
+    chosen because it is dark enough to keep the white icon labels readable at
+    8.9:1 while staying muted enough to sit under the navy titlebars without
+    competing with them.
+
+    html and body paint this too, so there is no flash of a different colour
+    before the shell mounts.
+  */
+  --salahos-desktop-bg: #2f4f4f;
 
   --salahos-font: "IBM Plex Mono", "Courier New", Courier, monospace;
 
@@ -39,9 +49,16 @@ ROOT VARIABLES
   --salahos-window-border: 2px;
 
   /*
-    Six colours and nothing else. Every surface, every border and every state
-    in the system is one of them, which is what keeps a system of this age
-    looking deliberate rather than decorated.
+    Six colours and nothing else, for everything the system is made of. Every
+    surface, every border and every state is one of them, which is what keeps a
+    system of this age looking deliberate rather than decorated.
+
+    The one exception is the wallpaper, which carries three further shades in
+    desktopWallpaperPixels.ts. It has to: the desktop icon labels are white and
+    sit straight on the wallpaper, so the artwork cannot borrow the greys and
+    navys that already mean "chrome" without those shades failing on contrast.
+    It is a deliberate, contained break rather than a seventh colour drifting
+    into general use.
   */
   --salahos-surface-raised: inset -1px -1px 0 0 var(--salahos-dark),
     inset 1px 1px 0 0 var(--salahos-white);
@@ -77,13 +94,13 @@ body,
 }
 
 html {
-  background: var(--salahos-teal);
+  background: var(--salahos-desktop-bg);
 }
 
 body {
   min-height: 100vh;
 
-  background: var(--salahos-teal);
+  background: var(--salahos-desktop-bg);
   color: var(--salahos-black);
 
   font-family: var(--salahos-font);
@@ -733,7 +750,7 @@ APP SHELL LAYOUT
   height: auto;
   min-height: 0;
 
-  background: var(--salahos-teal);
+  background: var(--salahos-desktop-bg);
 
   overflow: hidden;
 }
@@ -741,6 +758,28 @@ APP SHELL LAYOUT
 /* =========================================================
 DESKTOP ICONS
 ========================================================= */
+
+/*
+  The activity-bar strip along the bottom of the desktop. The artwork lives in
+  features/desktop/desktopWallpaper.tsx; this only places it.
+
+  Two rules keep it out of the way. It sits at z-index 0 while windows start at
+  10, so a window always paints above it, and it takes no pointer events, so it
+  cannot swallow a click meant for an icon or the desktop context menu.
+*/
+.salahos-wallpaper {
+  position: absolute;
+  inset: auto 0 0 0;
+
+  z-index: 0;
+  pointer-events: none;
+}
+
+.salahos-wallpaper-strip {
+  display: block;
+  width: 100%;
+  height: 64px;
+}
 
 .salahos-desktop-icons {
   position: absolute;

@@ -6,6 +6,7 @@ import type { DesktopAppId, WindowId } from "../../types/window";
 import { MenuPanel } from "../menu/MenuPanel";
 import { createDesktopMenuDefinitions } from "../menu/menuDefinitions";
 import { DesktopIconArt } from "./desktopIcons";
+import { DesktopWallpaper } from "./desktopWallpaper";
 
 type DesktopProps = {
   actions: SystemActions;
@@ -60,6 +61,8 @@ export function Desktop({
 
   return (
     <main className="salahos-desktop" onContextMenu={handleContextMenu}>
+      <DesktopWallpaper />
+
       <div
         className={
           isIconsArranged

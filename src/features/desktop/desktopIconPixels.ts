@@ -17,6 +17,7 @@
 */
 
 import type { DesktopAppId } from "../../types/window";
+import { toRects, type PixelRect } from "../../utils/pixelArt";
 
 const PIXEL_COLORS: Record<string, string> = {
   K: "var(--salahos-black)",
@@ -190,41 +191,7 @@ export const desktopIconPixels: Record<DesktopAppId, readonly string[]> = {
   terminal: TERMINAL,
 };
 
-/*
-  Collapses a bitmap into the rectangles that actually have to be painted.
-  A row of sixteen pixels costs at most sixteen nodes, and a run of equal
-  pixels costs one, which keeps every icon inside the same budget.
-*/
-function toRects(pixels: readonly string[]) {
-  const rects: { x: number; y: number; width: number; fill: string }[] = [];
-
-  pixels.forEach((row, y) => {
-    let x = 0;
-
-    while (x < row.length) {
-      const fill = PIXEL_COLORS[row[x] as string];
-
-      if (fill === undefined) {
-        x += 1;
-        continue;
-      }
-
-      let width = 1;
-
-      while (x + width < row.length && row[x + width] === row[x]) width += 1;
-
-      rects.push({ x, y, width, fill });
-      x += width;
-    }
-  });
-
-  return rects;
-}
-
-const rectCache = new Map<
-  DesktopAppId,
-  { x: number; y: number; width: number; fill: string }[]
->();
+const rectCache = new Map<DesktopAppId, PixelRect[]>();
 
 /*
   The bitmaps are constant, so the collapsed rectangles are computed once per
@@ -239,7 +206,7 @@ export function getDesktopIconRects(id: DesktopAppId) {
 
   if (!pixels) return [];
 
-  const rects = toRects(pixels);
+  const rects = toRects(pixels, PIXEL_COLORS);
 
   rectCache.set(id, rects);
 
