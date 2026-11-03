@@ -9,23 +9,24 @@
   The table is keyed by DesktopAppId, so an application without artwork is a
   TypeScript error rather than an icon that silently fails to render.
 
-  The palette letters map onto the system colours only, so the artwork can
-  never drift away from the rest of the interface:
+  The bits are the same, but the tones are chosen for the dark desktop: the
+  old black outline would disappear against a black wallpaper, so K is the
+  mid-grey line, W the white highlight and N the red brand accent.
 
-    K  black      W  white     L  light gray
-    G  gray       D  dark gray N  navy      .  transparent
+    K  outline    W  white     L  light gray
+    G  gray       D  dark gray N  red       .  transparent
 */
 
 import type { DesktopAppId } from "../../types/window";
 import { toRects, type PixelRect } from "../../utils/pixelArt";
 
 const PIXEL_COLORS: Record<string, string> = {
-  K: "var(--salahos-black)",
-  W: "var(--salahos-white)",
-  L: "var(--salahos-light)",
-  G: "var(--salahos-gray)",
-  D: "var(--salahos-dark)",
-  N: "var(--salahos-navy)",
+  K: "#8f8f8f",
+  W: "#ffffff",
+  L: "#c0c0c0",
+  G: "#5f5f5f",
+  D: "#3a3a3a",
+  N: "var(--salahos-accent-bright)",
 };
 
 const SALAH: readonly string[] = [

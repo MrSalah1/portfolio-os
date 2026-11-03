@@ -1,62 +1,26 @@
 /*
-  The desktop wallpaper: a flat surface with a strip of activity bars along the
-  bottom edge, drawn as pixel art and painted the same way the icons are.
+  The desktop wallpaper.
 
-  Why it is two pieces rather than one tiling pattern: the artwork repeats
-  horizontally only. A square pattern would repeat on both axes, which puts a
-  row of bars every tile-height down the screen as horizontal banding rather
-  than one monitor trace along the bottom. So the flat colour comes from the
-  desktop's own background, and this component supplies only the strip.
+  A single decorative layer that paints the red smiley artwork faintly over the
+  black desktop. The source image has a pure black background, so screen
+  blending leaves only the mark visible and the surrounding black disappears
+  into the surface.
 
-  The strip is drawn once into an SVG pattern and repeated by the browser, so
-  the number of nodes in the document is the same on a phone and on a wide
-  monitor. The bitmap and its palette live in desktopWallpaperPixels.ts.
+  The artwork lives in src/assets so Vite rewrites its URL with the configured
+  base path; the published site is a project site served from /portfolio-os/.
+
+  It is decorative, and it sits under the windows and the icons, so it is
+  hidden from assistive technology rather than announced as content.
 */
 
-import {
-  WALLPAPER_SCALE,
-  WALLPAPER_TILE_HEIGHT,
-  WALLPAPER_TILE_WIDTH,
-  wallpaperRects,
-} from "./desktopWallpaperPixels";
+import wallpaperUrl from "../../assets/smiley.png";
 
-const TILE_CSS_WIDTH = WALLPAPER_TILE_WIDTH * WALLPAPER_SCALE;
-const TILE_CSS_HEIGHT = WALLPAPER_TILE_HEIGHT * WALLPAPER_SCALE;
-
-/*
-  Decorative, and it sits under the windows and the icons, so it is hidden from
-  assistive technology rather than announced as content.
-*/
 export function DesktopWallpaper() {
   return (
-    <div className="salahos-wallpaper" aria-hidden="true">
-      <svg
-        className="salahos-wallpaper-strip"
-        width="100%"
-        height={TILE_CSS_HEIGHT}
-        shapeRendering="crispEdges"
-      >
-        <defs>
-          <pattern
-            id="salahos-activity-bars"
-            width={TILE_CSS_WIDTH}
-            height={TILE_CSS_HEIGHT}
-            patternUnits="userSpaceOnUse"
-          >
-            {wallpaperRects.map((rect) => (
-              <rect
-                key={`${rect.y}-${rect.x}-${rect.width}`}
-                x={rect.x * WALLPAPER_SCALE}
-                y={rect.y * WALLPAPER_SCALE}
-                width={rect.width * WALLPAPER_SCALE}
-                height={WALLPAPER_SCALE}
-                fill={rect.fill}
-              />
-            ))}
-          </pattern>
-        </defs>
-        <rect width="100%" height={TILE_CSS_HEIGHT} fill="url(#salahos-activity-bars)" />
-      </svg>
-    </div>
+    <div
+      className="salahos-wallpaper"
+      aria-hidden="true"
+      style={{ backgroundImage: `url(${wallpaperUrl})` }}
+    />
   );
 }

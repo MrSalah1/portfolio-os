@@ -37,10 +37,9 @@ rectangles, with no image assets. Icons open on a single click, and a right
 click opens a context menu. `View ▸ Arrange Icons` sorts and upper-cases them
 the way a real desktop does.
 
-**Wallpaper.** A slate desktop with a strip of activity bars along the bottom
-edge, drawn as pixel art by the same renderer the icons use. The artwork repeats
-horizontally only, so the bars rise from the real bottom of the surface instead
-of banding down the screen.
+**Wallpaper.** A black desktop with a faint red smiley watermark centred behind
+the icons and windows. The artwork is a build asset blended with `screen`, so
+its own black field disappears into the surface and only the red mark remains.
 
 **Windows.** Open, close, minimize, restore, maximize, drag, and raise on
 focus. Windows cannot be dragged somewhere their title bar cannot be grabbed
@@ -60,9 +59,8 @@ disagree about which programs exist. Scrollback history works with `ArrowUp` /
 
 **Task bar and status bar.** Task buttons for every open window, the clock, and
 the social links (LinkedIn, GitHub, Codeforces). There is no theme toggle: the
-palette is a deliberate six-colour system with a single light scheme. The
-wallpaper's three extra shades are the only departure from it, and only because
-the white icon labels have to stay readable on top of them.
+palette is a deliberate dark scheme — near-black surfaces, light text and one
+blood-red accent that the wallpaper shares.
 
 **Content.** Profile, education, skills, experience, projects and contact
 details, all sourced from `src/data/` so the terminal, the windows and the
@@ -135,7 +133,7 @@ environment, no DOM and no testing library:
 | `boot.spec.ts` | the sequence, skipping, reduced motion |
 | `assets.spec.ts` | built asset URLs, the base path, the favicon |
 | `desktop.spec.ts` | icons, labels, artwork, context menu, arranging |
-| `wallpaper.spec.ts` | strip placement, layering under windows, click pass-through |
+| `wallpaper.spec.ts` | artwork placement, layering under windows, click pass-through |
 | `windows.spec.ts` | lifecycle, focus, stacking, dragging, dialogs, show desktop |
 | `menus.spec.ts` | contents of every menu, dismissal, keyboard navigation |
 | `terminal.spec.ts` | prompt, commands, history, clearing, exit |
@@ -165,7 +163,7 @@ src/
     window/               the window frame and its controls
   hooks/                  useWindowManager, useDraggableWindow
   types/                  shared types
-  utils/pixelArt.ts       the bitmap renderer shared by the icons and wallpaper
+  utils/pixelArt.ts       the bitmap renderer used by the desktop icons
 tests/browser/            Playwright specs and shared helpers
 ```
 
@@ -236,19 +234,22 @@ Removing it is a real cleanup, but it is a visual-risk change: preflight
 normalises more than the project currently overrides. If you remove it, diff the
 built CSS and check every list, button, input and heading.
 
-**The wallpaper is constrained by the icon labels.** `desktopWallpaperPixels.ts`
-carries three shades that are not part of the six-colour palette, because the
-desktop icon labels are white and sit directly on the wallpaper with no
-background of their own. Any shade brighter than about `#527a7a` drops below
-the 4.5:1 contrast WCAG asks for with white text and the labels become hard to
-read — which is an accessibility failure, not just a taste question, so
-`desktopWallpaper.test.ts` measures the luminance and fails the build rather
-than leaving it to be spotted.
+**The wallpaper is a blended image.** `src/assets/smiley.png` is imported by
+`desktopWallpaper.tsx`, which lets Vite rewrite the URL with the `/portfolio-os/`
+base. The layer keeps its own black field invisible with `mix-blend-mode:
+screen` and is kept faint on purpose; desktop icon labels carry a hard shadow so
+they stay readable wherever the mark passes behind them. The layer stays at
+`z-index: 0` with `pointer-events: none`, so it can never sit in front of a
+window or swallow a click.
 
-That same file also asserts the artwork tiles without a seam, which means a bar
-is never cut in half at the tile boundary. If the bar pitch or the tile width
-changes, the pitch still has to divide the tile evenly and the last columns
-still have to be gap.
+**Dark palette.** `src/index.css` defines the whole scheme in one token block.
+The six legacy token names are retained (`black`, `white`, `light`, `gray`,
+`dark`, `navy`) so the component classes did not have to change, but their
+values now describe a dark surface system: `black` is the light foreground,
+`light` is the near-black surface, `navy` is the red accent, and `--shadow` /
+`--accent-bright` / `--muted` cover the cases the old names could not express.
+Bevels use `--bevel-light` and `--bevel-dark` rather than the light scheme's
+white and dark grey.
 
 **A `date` command exists.** The terminal's `date` command is intentionally
 hard-coded, so a stale build can never show the wrong build date.

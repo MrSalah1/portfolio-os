@@ -5,15 +5,19 @@ SALAHOS DESIGN TOKENS
 ========================================================= */
 
 @theme {
-  --color-salahos-black: #000000;
+  --color-salahos-black: #f2f2f2;
   --color-salahos-white: #ffffff;
 
-  --color-salahos-light: #c0c0c0;
-  --color-salahos-gray: #808080;
-  --color-salahos-dark: #404040;
+  --color-salahos-light: #141414;
+  --color-salahos-gray: #303030;
+  --color-salahos-dark: #050505;
 
-  --color-salahos-navy: #000080;
-  --color-salahos-desktop-bg: #2f4f4f;
+  --color-salahos-navy: #a30f12;
+  --color-salahos-desktop-bg: #000000;
+
+  --color-salahos-accent-bright: #ff3b30;
+  --color-salahos-muted: #8f8f8f;
+  --color-salahos-shadow: #000000;
 
   --font-salahos: "IBM Plex Mono", "Courier New", Courier, monospace;
 }
@@ -23,25 +27,24 @@ ROOT VARIABLES
 ========================================================= */
 
 :root {
-  --salahos-black: #000000;
+  --salahos-black: #f2f2f2;
   --salahos-white: #ffffff;
 
-  --salahos-light: #c0c0c0;
-  --salahos-gray: #808080;
-  --salahos-dark: #404040;
+  --salahos-light: #141414;
+  --salahos-gray: #303030;
+  --salahos-dark: #050505;
 
-  --salahos-navy: #000080;
+  --salahos-navy: #a30f12;
+  --salahos-accent-bright: #ff3b30;
+  --salahos-muted: #8f8f8f;
+  --salahos-shadow: #000000;
 
   /*
-    The desktop surface, and the backdrop behind it. Not a VGA colour: slate was
-    chosen because it is dark enough to keep the white icon labels readable at
-    8.9:1 while staying muted enough to sit under the navy titlebars without
-    competing with them.
-
-    html and body paint this too, so there is no flash of a different colour
-    before the shell mounts.
+    The desktop is pure black. The red smiley watermark is painted over it by
+    features/desktop/desktopWallpaper.tsx, and html and body paint the same
+    black, so there is no flash of a different colour before the shell mounts.
   */
-  --salahos-desktop-bg: #2f4f4f;
+  --salahos-desktop-bg: #000000;
 
   --salahos-font: "IBM Plex Mono", "Courier New", Courier, monospace;
 
@@ -49,25 +52,26 @@ ROOT VARIABLES
   --salahos-window-border: 2px;
 
   /*
-    Six colours and nothing else, for everything the system is made of. Every
-    surface, every border and every state is one of them, which is what keeps a
-    system of this age looking deliberate rather than decorated.
+    A dark take on the six-colour system: a near-black surface, three greys for
+    the chrome, light text and one blood-red accent. Every surface, border and
+    state still comes from this set, which keeps the machine looking deliberate
+    rather than decorated.
 
-    The one exception is the wallpaper, which carries three further shades in
-    desktopWallpaperPixels.ts. It has to: the desktop icon labels are white and
-    sit straight on the wallpaper, so the artwork cannot borrow the greys and
-    navys that already mean "chrome" without those shades failing on contrast.
-    It is a deliberate, contained break rather than a seventh colour drifting
-    into general use.
+    The bevels get their own two shades because a raised surface in a dark
+    scheme needs a grey highlight and a black shadow, where the light scheme
+    used white and a dark grey.
   */
-  --salahos-surface-raised: inset -1px -1px 0 0 var(--salahos-dark),
-    inset 1px 1px 0 0 var(--salahos-white);
-  --salahos-surface-sunken: inset -1px -1px 0 0 var(--salahos-white),
-    inset 1px 1px 0 0 var(--salahos-gray);
-  --salahos-raised-border: var(--salahos-white) var(--salahos-dark) var(--salahos-dark)
-    var(--salahos-white);
-  --salahos-sunken-border: var(--salahos-gray) var(--salahos-white) var(--salahos-white)
-    var(--salahos-gray);
+  --salahos-bevel-light: #3a3a3a;
+  --salahos-bevel-dark: #000000;
+
+  --salahos-surface-raised: inset -1px -1px 0 0 var(--salahos-bevel-dark),
+    inset 1px 1px 0 0 var(--salahos-bevel-light);
+  --salahos-surface-sunken: inset -1px -1px 0 0 var(--salahos-bevel-light),
+    inset 1px 1px 0 0 var(--salahos-bevel-dark);
+  --salahos-raised-border: var(--salahos-bevel-light) var(--salahos-bevel-dark)
+    var(--salahos-bevel-dark) var(--salahos-bevel-light);
+  --salahos-sunken-border: var(--salahos-bevel-dark) var(--salahos-bevel-light)
+    var(--salahos-bevel-light) var(--salahos-bevel-dark);
 
   /*
     Motion is short and stepped. A machine of this vintage moved in discrete
@@ -186,11 +190,11 @@ SCROLLBARS
 *::-webkit-scrollbar-thumb {
   background: var(--salahos-gray);
 
-  border-top: 2px solid var(--salahos-white);
-  border-left: 2px solid var(--salahos-white);
+  border-top: 2px solid var(--salahos-bevel-light);
+  border-left: 2px solid var(--salahos-bevel-light);
 
-  border-right: 2px solid var(--salahos-dark);
-  border-bottom: 2px solid var(--salahos-dark);
+  border-right: 2px solid var(--salahos-bevel-dark);
+  border-bottom: 2px solid var(--salahos-bevel-dark);
 }
 
 *::-webkit-scrollbar-button {
@@ -199,11 +203,11 @@ SCROLLBARS
 
   background: var(--salahos-light);
 
-  border-top: 2px solid var(--salahos-white);
-  border-left: 2px solid var(--salahos-white);
+  border-top: 2px solid var(--salahos-bevel-light);
+  border-left: 2px solid var(--salahos-bevel-light);
 
-  border-right: 2px solid var(--salahos-dark);
-  border-bottom: 2px solid var(--salahos-dark);
+  border-right: 2px solid var(--salahos-bevel-dark);
+  border-bottom: 2px solid var(--salahos-bevel-dark);
 }
 
 /* =========================================================
@@ -244,11 +248,11 @@ WINDOW
 .salahos-window {
   background: var(--salahos-light);
 
-  border-top: var(--salahos-window-border) solid var(--salahos-white);
-  border-left: var(--salahos-window-border) solid var(--salahos-white);
+  border-top: var(--salahos-window-border) solid var(--salahos-bevel-light);
+  border-left: var(--salahos-window-border) solid var(--salahos-bevel-light);
 
-  border-right: var(--salahos-window-border) solid var(--salahos-dark);
-  border-bottom: var(--salahos-window-border) solid var(--salahos-dark);
+  border-right: var(--salahos-window-border) solid var(--salahos-bevel-dark);
+  border-bottom: var(--salahos-window-border) solid var(--salahos-bevel-dark);
 }
 
 /*
@@ -263,7 +267,7 @@ WINDOW
 }
 
 .salahos-window.is-focused {
-  box-shadow: 2px 2px 0 0 var(--salahos-black);
+  box-shadow: 2px 2px 0 0 var(--salahos-shadow);
 }
 
 /* =========================================================
@@ -292,14 +296,14 @@ WINDOW TITLE BAR
 }
 
 /*
-  An unfocused caption is flat light gray with black text rather than a
-  hatched or dimmed navy one. It keeps the title readable when the window
+  An unfocused caption is flat near-black with muted text rather than a
+  hatched or dimmed red one. It keeps the title readable when the window
   loses focus, and it separates active from inactive through surface and
   contrast instead of through a texture that competes with the text.
 */
 .salahos-titlebar.inactive {
-  background: var(--salahos-light);
-  color: var(--salahos-black);
+  background: #0e0e0e;
+  color: var(--salahos-muted);
 
   border-bottom: 1px solid var(--salahos-gray);
 }
@@ -358,7 +362,7 @@ WINDOW CONTROL
 }
 
 .salahos-window-control:hover {
-  background: var(--salahos-white);
+  background: var(--salahos-bevel-light);
 }
 
 .salahos-window-control:active {
@@ -442,7 +446,7 @@ WINDOW CONTROL
 }
 
 .salahos-window-control:hover .salahos-glyph-restore::after {
-  background: var(--salahos-white);
+  background: var(--salahos-bevel-light);
 }
 
 .salahos-window-control:active .salahos-glyph-restore::after {
@@ -571,7 +575,7 @@ COMMAND BAR
   background: var(--salahos-light);
   color: var(--salahos-black);
 
-  border-bottom: 1px solid var(--salahos-dark);
+  border-bottom: 1px solid var(--salahos-bevel-dark);
 
   user-select: none;
 
@@ -638,13 +642,13 @@ MENU
 
   background: var(--salahos-light);
 
-  border-top: 2px solid var(--salahos-white);
-  border-left: 2px solid var(--salahos-white);
+  border-top: 2px solid var(--salahos-bevel-light);
+  border-left: 2px solid var(--salahos-bevel-light);
 
-  border-right: 2px solid var(--salahos-dark);
-  border-bottom: 2px solid var(--salahos-dark);
+  border-right: 2px solid var(--salahos-bevel-dark);
+  border-bottom: 2px solid var(--salahos-bevel-dark);
 
-  box-shadow: 2px 2px 0 0 var(--salahos-black);
+  box-shadow: 2px 2px 0 0 var(--salahos-shadow);
 
   user-select: none;
 
@@ -655,8 +659,8 @@ MENU
   height: 0;
   margin: 3px 2px;
 
-  border-top: 1px solid var(--salahos-gray);
-  border-bottom: 1px solid var(--salahos-white);
+  border-top: 1px solid var(--salahos-bevel-dark);
+  border-bottom: 1px solid var(--salahos-bevel-light);
 }
 
 .salahos-menu-item {
@@ -720,8 +724,9 @@ MENU
 }
 
 .salahos-menu-item:disabled {
-  color: var(--salahos-dark);
+  color: var(--salahos-muted);
   cursor: default;
+  opacity: 0.55;
 }
 
 /* =========================================================
@@ -750,7 +755,9 @@ APP SHELL LAYOUT
   height: auto;
   min-height: 0;
 
-  background: var(--salahos-desktop-bg);
+  background:
+    radial-gradient(60% 60% at 50% 42%, rgba(163, 15, 18, 0.1), transparent 70%),
+    var(--salahos-desktop-bg);
 
   overflow: hidden;
 }
@@ -760,8 +767,12 @@ DESKTOP ICONS
 ========================================================= */
 
 /*
-  The activity-bar strip along the bottom of the desktop. The artwork lives in
-  features/desktop/desktopWallpaper.tsx; this only places it.
+  The red smiley watermark. The artwork lives in
+  features/desktop/desktopWallpaper.tsx; this only places and fades it.
+
+  The source image is a mark on a pure-black field, so screen blending makes
+  the field disappear into the black desktop and leaves only the red mark. It
+  is deliberately faint: it is a backdrop, not content.
 
   Two rules keep it out of the way. It sits at z-index 0 while windows start at
   10, so a window always paints above it, and it takes no pointer events, so it
@@ -769,16 +780,18 @@ DESKTOP ICONS
 */
 .salahos-wallpaper {
   position: absolute;
-  inset: auto 0 0 0;
+  inset: 0;
 
   z-index: 0;
   pointer-events: none;
-}
 
-.salahos-wallpaper-strip {
-  display: block;
-  width: 100%;
-  height: 64px;
+  background-repeat: no-repeat;
+  background-position: center 42%;
+  background-size: min(70vw, 720px) auto;
+
+  opacity: 0.32;
+  mix-blend-mode: screen;
+  filter: saturate(0.9) contrast(1.05);
 }
 
 .salahos-desktop-icons {
@@ -850,6 +863,12 @@ DESKTOP ICONS
 
   font-size: 11px;
   line-height: 1.25;
+
+  /*
+    A hard shadow rather than a glow: the labels sit straight on the wallpaper,
+    and this keeps them readable wherever the watermark passes behind them.
+  */
+  text-shadow: 0 1px 0 var(--salahos-shadow);
 }
 
 .salahos-desktop-icon-name,
@@ -912,7 +931,7 @@ STATUS BAR
   background: var(--salahos-light);
   color: var(--salahos-black);
 
-  border-top: 1px solid var(--salahos-white);
+  border-top: 1px solid var(--salahos-bevel-light);
 
   overflow: hidden;
 }
@@ -987,13 +1006,13 @@ STATUS BAR
   color: var(--salahos-white);
 
   font-weight: 700;
-  border-color: var(--salahos-black);
+  border-color: var(--salahos-shadow);
 
   box-shadow: inset 1px 1px 0 0 var(--salahos-gray);
 }
 
 .salahos-status-item[data-minimized="true"] {
-  color: var(--salahos-dark);
+  color: var(--salahos-muted);
 }
 
 .salahos-status-item[data-minimized="true"]::before {
@@ -1105,7 +1124,7 @@ APPLICATION CONTENT
 .salahos-detail-section h2 {
   margin-bottom: 8px;
 
-  color: var(--salahos-navy);
+  color: var(--salahos-accent-bright);
   font-size: 13px;
   text-transform: uppercase;
 }
@@ -1113,7 +1132,7 @@ APPLICATION CONTENT
 .salahos-detail-section h3 {
   margin-top: 10px;
 
-  color: var(--salahos-dark);
+  color: var(--salahos-muted);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -1136,7 +1155,7 @@ APPLICATION CONTENT
 }
 
 .salahos-detail-list li::marker {
-  color: var(--salahos-navy);
+  color: var(--salahos-accent-bright);
 }
 
 .salahos-detail-links {
@@ -1148,7 +1167,7 @@ APPLICATION CONTENT
 }
 
 .salahos-detail-links a {
-  color: var(--salahos-navy);
+  color: var(--salahos-accent-bright);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -1196,7 +1215,7 @@ DIALOG ACTIONS
 }
 
 .salahos-dialog-button:hover {
-  background: var(--salahos-white);
+  background: var(--salahos-bevel-light);
 }
 
 .salahos-dialog-button:active {
@@ -1243,7 +1262,7 @@ SALAH.EXE
 .salahos-profile-section h2 {
   margin-bottom: 7px;
 
-  color: var(--salahos-navy);
+  color: var(--salahos-accent-bright);
   font-size: 13px;
   text-transform: uppercase;
 }
@@ -1266,7 +1285,7 @@ SYSTEM DIALOG CONTENT
 .salahos-about-title {
   margin: 0;
 
-  color: var(--salahos-navy);
+  color: var(--salahos-accent-bright);
   font-size: 20px;
   line-height: 1.15;
 }
@@ -1274,7 +1293,7 @@ SYSTEM DIALOG CONTENT
 .salahos-about-tagline {
   margin: 5px 0 0;
 
-  color: var(--salahos-dark);
+  color: var(--salahos-muted);
 }
 
 .salahos-shortcut {
@@ -1298,7 +1317,7 @@ SYSTEM DIALOG CONTENT
 
   padding: 1px 5px;
 
-  background: var(--salahos-white);
+  background: var(--salahos-light);
   border: 1px solid;
   border-color: var(--salahos-sunken-border);
 
@@ -1315,7 +1334,7 @@ TERMINAL
 
   padding: 10px 12px;
 
-  background: var(--salahos-black);
+  background: var(--salahos-shadow);
   color: var(--salahos-white);
 
   font-family: var(--salahos-font);
@@ -1346,15 +1365,15 @@ TERMINAL
 /*
   Three levels of output. Fresh output is the screen colour, a heading is
   bright and bold, and anything the system reports back is stepped down to
-  light gray, which separates the command and its result from the result
+  muted grey, which separates the command and its result from the result
   itself without adding a colour to the system.
 */
 .salahos-terminal-line[data-kind="echo"] {
-  color: var(--salahos-light);
+  color: var(--salahos-muted);
 }
 
 .salahos-terminal-line[data-kind="banner"] {
-  color: var(--salahos-light);
+  color: var(--salahos-muted);
 }
 
 .salahos-terminal-line[data-kind="heading"] {
@@ -1362,7 +1381,7 @@ TERMINAL
 }
 
 .salahos-terminal-line[data-kind="error"] {
-  color: var(--salahos-light);
+  color: var(--salahos-accent-bright);
 }
 
 .salahos-terminal-prompt {
@@ -1373,7 +1392,7 @@ TERMINAL
 .salahos-terminal-prompt-label {
   flex: 0 0 auto;
 
-  color: var(--salahos-light);
+  color: var(--salahos-muted);
 }
 
 .salahos-terminal-input {
@@ -1400,7 +1419,7 @@ TERMINAL
 
 .salahos-terminal::selection {
   background: var(--salahos-white);
-  color: var(--salahos-black);
+  color: var(--salahos-shadow);
 }
 
 /* =========================================================
@@ -1408,13 +1427,13 @@ FOCUS
 ========================================================= */
 
 :focus-visible {
-  outline: 1px dotted var(--salahos-black);
+  outline: 1px dotted var(--salahos-accent-bright);
   outline-offset: 1px;
 }
 
 /*
-  A black ring disappears on the navy caption, on the black terminal and on a
-  navy highlight, so those surfaces get the white one instead.
+  A red ring disappears on the red caption and on a red highlight, so those
+  surfaces get the white one instead.
 */
 .salahos-titlebar :focus-visible,
 .salahos-terminal :focus-visible,
@@ -1459,8 +1478,8 @@ BOOT
 
   padding: 20px 22px;
 
-  background: var(--salahos-black);
-  color: var(--salahos-light);
+  background: var(--salahos-shadow);
+  color: var(--salahos-black);
 
   font-size: 14px;
   line-height: 1.5;
@@ -1498,7 +1517,7 @@ BOOT
   width: 8px;
   height: 14px;
 
-  background: var(--salahos-light);
+  background: var(--salahos-accent-bright);
 
   animation: salahos-boot-cursor 900ms steps(1, end) infinite;
 }
@@ -1506,7 +1525,7 @@ BOOT
 .salahos-boot-skip {
   margin: 0;
 
-  color: var(--salahos-dark);
+  color: var(--salahos-muted);
   font-size: 12px;
 }
 
@@ -1629,6 +1648,17 @@ MOBILE
     bottom: auto;
 
     flex-flow: row wrap;
+  }
+
+  /*
+    On a phone the watermark has less room and the icon rows sit above it, so
+    it grows relative to the viewport and steps back a little.
+  */
+  .salahos-wallpaper {
+    background-position: center 40%;
+    background-size: min(92vw, 520px) auto;
+
+    opacity: 0.26;
   }
 
   /*

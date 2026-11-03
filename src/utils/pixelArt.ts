@@ -1,15 +1,15 @@
 /*
-  Pixel-art renderer shared by the desktop icons and the wallpaper.
+  Pixel-art renderer for the desktop icons.
 
   A bitmap is text, one character per pixel, which is how this kind of artwork
   would have been authored on the machine the system imitates. The renderer
   collapses horizontal runs of equal pixels into single rectangles, so a bitmap
   costs a handful of nodes instead of one per pixel.
 
-  The palette is supplied by the caller rather than fixed here, because the
-  icons and the wallpaper are deliberately not the same colour scheme. A
-  character with no entry in the palette is skipped rather than thrown on: a
-  typo should leave a gap, not blank the whole surface.
+  The palette is supplied by the caller rather than fixed here, because each
+  icon is deliberately not the same colour scheme. A character with no entry in
+  the palette is skipped rather than thrown on: a typo should leave a gap, not
+  blank the whole surface.
 */
 
 export type PixelRect = {

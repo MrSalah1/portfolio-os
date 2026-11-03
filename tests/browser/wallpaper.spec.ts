@@ -6,15 +6,10 @@ import { bootAndSkip, desktop, desktopIcon, settledBox, windowByTitle } from "./
   it the easiest thing in the system to break by accident: a positioned layer
   that swallows a click, or paints over a window, would not fail any existing
   test. These cover the placement, the layering and the pass-through.
-
-  The bitmap itself is checked in desktopWallpaper.test.ts. What is left to see
-  with a real browser is whether it lands where it is supposed to.
 */
 
-const STRIP_HEIGHT = 64;
-
-function strip(page: Page) {
-  return page.locator(".salahos-wallpaper-strip");
+function wallpaper(page: Page) {
+  return page.locator(".salahos-wallpaper");
 }
 
 /*
@@ -42,78 +37,70 @@ async function ownerAt(page: Page, x: number, y: number) {
 }
 
 test.describe("the wallpaper", () => {
-  test("paints a strip along the bottom of the surface", async ({ page }) => {
+  test("paints the smiley artwork across the whole surface", async ({ page }) => {
     await bootAndSkip(page);
 
     const surface = await desktop(page).boundingBox();
-    const band = await strip(page).boundingBox();
+    const layer = await wallpaper(page).boundingBox();
 
     expect(surface).not.toBeNull();
-    expect(band).not.toBeNull();
-    if (!surface || !band) return;
+    expect(layer).not.toBeNull();
+    if (!surface || !layer) return;
 
-    /* Sits on the bottom edge rather than floating in the middle of the desktop. */
-    expect(band.y + band.height).toBeGreaterThanOrEqual(surface.y + surface.height - 1);
+    /* Covers the desktop edge to edge, so the mark is not boxed in. */
+    expect(layer.x).toBeCloseTo(surface.x, 0);
+    expect(layer.y).toBeCloseTo(surface.y, 0);
+    expect(layer.width).toBeCloseTo(surface.width, 0);
+    expect(layer.height).toBeCloseTo(surface.height, 0);
 
-    /* Spans the full width, so the repeat has no gap to show at either end. */
-    expect(band.x).toBeLessThanOrEqual(surface.x + 1);
-    expect(band.x + band.width).toBeGreaterThanOrEqual(surface.x + surface.width - 1);
+    /*
+      The artwork is a build asset imported from src/assets, so its URL must
+      resolve under the configured base rather than from the domain root.
+    */
+    const background = await wallpaper(page).evaluate(
+      (node) => getComputedStyle(node).backgroundImage,
+    );
 
-    /* One tile at 2x, so the bars keep their square proportions. */
-    expect(Math.round(band.height)).toBe(STRIP_HEIGHT);
+    expect(background).toContain("smiley");
+    expect(background).not.toContain("url(\"/smiley");
   });
 
   test("takes no pointer events, so it cannot intercept a desktop click", async ({ page }) => {
     await bootAndSkip(page);
 
-    const events = await page
-      .locator(".salahos-wallpaper")
-      .evaluate((node) => getComputedStyle(node).pointerEvents);
+    const events = await wallpaper(page).evaluate((node) => getComputedStyle(node).pointerEvents);
 
     expect(events).toBe("none");
   });
 
-  test("leaves the desktop itself reachable over the strip", async ({ page }) => {
+  test("leaves the desktop itself reachable over the artwork", async ({ page }) => {
     await bootAndSkip(page);
 
     const surface = await desktop(page).boundingBox();
-    const band = await strip(page).boundingBox();
 
     expect(surface).not.toBeNull();
-    expect(band).not.toBeNull();
-    if (!surface || !band) return;
+    if (!surface) return;
 
     /*
       Pointed at bare wallpaper: no icon and no window here, so the desktop
-      itself must receive the hit. Anything else means the strip is sitting in
+      itself must receive the hit. Anything else means the layer is sitting in
       front of the surface.
     */
     const x = surface.x + surface.width / 2;
-    const y = band.y + band.height / 2;
+    const y = surface.y + surface.height / 2;
 
     expect(await ownerAt(page, x, y)).toBe(".salahos-desktop");
   });
 
-  test("lets an open window paint above the strip", async ({ page }) => {
+  test("lets an open window paint above the artwork", async ({ page }) => {
     await bootAndSkip(page);
     await desktopIcon(page, "Salah.exe").click();
 
     const frame = await settledBox(windowByTitle(page, "Salah.exe"));
-    const surface = await desktop(page).boundingBox();
-    const band = await strip(page).boundingBox();
 
     expect(frame).not.toBeNull();
-    expect(surface).not.toBeNull();
-    expect(band).not.toBeNull();
-    if (!frame || !surface || !band) return;
+    if (!frame) return;
 
-    /*
-      The window is seated in the upper part of the desktop, so the strip sits
-      below it and the two never overlap. This asserts the window owns the hit
-      where the window is, which is the property that matters: if the wallpaper
-      ever gained a higher stacking order, the surface behind a window is
-      exactly what would start swallowing clicks.
-    */
     const x = frame.x + frame.width / 2;
     const y = frame.y + frame.height / 2;
 
@@ -135,6 +122,6 @@ test.describe("the wallpaper", () => {
   test("is hidden from assistive technology", async ({ page }) => {
     await bootAndSkip(page);
 
-    await expect(page.locator(".salahos-wallpaper")).toHaveAttribute("aria-hidden", "true");
+    await expect(wallpaper(page)).toHaveAttribute("aria-hidden", "true");
   });
 });
