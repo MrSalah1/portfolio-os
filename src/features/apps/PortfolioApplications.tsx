@@ -3,11 +3,7 @@ import { education } from "../../data/education";
 import { experience } from "../../data/experience";
 import { profile } from "../../data/profile";
 import { projects } from "../../data/projects";
-import {
-  softSkills,
-  spokenLanguages,
-  technicalSkills,
-} from "../../data/skills";
+import { spokenLanguages, technicalSkills } from "../../data/skills";
 import type { WindowControllerProps } from "../../types/window";
 import { formatProjectPeriod } from "../../utils/portfolio";
 import {
@@ -57,14 +53,6 @@ export function SkillsApplication(props: WindowControllerProps) {
           <div className="salahos-detail-group" key={group.category}>
             <h3>{group.category}</h3>
             <p>{group.items.join(" / ")}</p>
-          </div>
-        ))}
-      </DetailSection>
-      <DetailSection title="SOFT SKILLS">
-        {softSkills.map((group) => (
-          <div className="salahos-detail-group" key={group.category}>
-            <h3>{group.category}</h3>
-            <p>{group.items.join(" ")}</p>
           </div>
         ))}
       </DetailSection>

@@ -29,6 +29,38 @@ export const projects: ProjectRecord[] = [
     },
   },
   {
+    name: "Ticket Classifier LLM",
+    type: "AI Project",
+    technologies: [
+      "Python",
+      "PyTorch",
+      "Hugging Face Transformers",
+      "Pydantic",
+    ],
+    description:
+      "A Python-based support-ticket classification system that labels tickets by category, sentiment and urgency, then generates a summary.",
+    features: [
+      "Classifies support tickets into 5 categories, detects 3 sentiment levels and identifies 3 urgency levels.",
+      "Custom text-generation pipeline with KV caching, Top-K/Top-P sampling, temperature control and stop-sequence detection.",
+      "Pydantic-based structured output validation.",
+      "Evaluated on 10 customer support tickets.",
+    ],
+    links: {},
+  },
+  {
+    name: "Brain Tumor Detection Model",
+    type: "AI Project",
+    technologies: ["Python", "TensorFlow", "CNN"],
+    description:
+      "A convolutional neural network that classifies brain tumor MRI images into four categories.",
+    features: [
+      "Reached 93% test accuracy across 4 categories.",
+      "Ran 5+ model experiments using augmentation pipelines.",
+      "Selected the top architecture by F1-score, with 94% precision and 92% recall.",
+    ],
+    links: {},
+  },
+  {
     name: "Masroofy Financial Tracker",
     date: "June 2026",
     type: "Course Project",

@@ -2,6 +2,26 @@ import type { ExperienceRecord } from "../types/portfolio";
 
 export const experience: ExperienceRecord[] = [
   {
+    role: "Software Development Intern",
+    company: "SBIS-Sowaidan Group",
+    period: "Jul 2026 - Present",
+    description: "Odoo development and internal tooling at Smart Village, Egypt",
+    responsibilities: [
+      "Developed and maintained Odoo-based solutions using Python, contributing to 115+ client tasks and custom business requirements.",
+      "Contributed to developing a screen-monitoring tool to track employee activity and support productivity analysis.",
+      "Built a RAG-based application to automate Odoo report design using historical report examples, reducing manual effort.",
+    ],
+  },
+  {
+    role: "Generative AI & Agentic AI Trainee",
+    company: "Digital Egypt Pioneers Initiative (DEPI)",
+    period: "Aug 2026 - Jan 2027",
+    description: "Hands-on training in generative AI and agentic systems",
+    responsibilities: [
+      "Gained hands-on experience building Generative AI applications and agentic systems using LLMs, prompt engineering, and structured output generation.",
+    ],
+  },
+  {
     role: "AI Training Contributor",
     company: "Outlier AI",
     period: "Sep 2024 - Feb 2025",
